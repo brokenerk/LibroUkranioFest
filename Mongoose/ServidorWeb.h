@@ -1,5 +1,6 @@
 #ifndef SERVIDORWEB_H_
 #define SERVIDORWEB_H_
+#define MG_ENABLE_HTTP_STREAMING_MULTIPART true
 #include "mongoose.h"
 #include <iostream>
 using namespace std;
@@ -7,7 +8,6 @@ using namespace std;
 class ServidorWeb{
 	public:
 		ServidorWeb(char* directorio, char* pto);
-		void inicializaDatos(char* dirIp, int u, int s);
 		void escuchar();
 	private:
 		static void manejarEvento(struct mg_connection *nc, int ev, void *p);

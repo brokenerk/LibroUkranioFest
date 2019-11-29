@@ -1,6 +1,4 @@
 #include "ServidorWeb.h"
-char ip[13];
-int ult, segundos;
 static struct mg_serve_http_opts opts;
 
 ServidorWeb::ServidorWeb(char* directorio, char* pto) {
@@ -12,12 +10,6 @@ ServidorWeb::ServidorWeb(char* directorio, char* pto) {
 		fprintf(stderr, "%s", "No se encontro el directorio, saliendo\n");
 		exit(1);
 	}
-}
-
-void ServidorWeb::inicializaDatos(char* dirIp, int u, int s) {
-	memcpy(ip, dirIp, 13);
-	ult = u;
-	segundos = s;
 }
 
 void ServidorWeb::escuchar() {
@@ -53,6 +45,7 @@ void ServidorWeb::manejarEvento(struct mg_connection *nc, int ev, void *p) {
 	    case MG_EV_HTTP_PART_DATA:
 	    case MG_EV_HTTP_PART_END:
       		mg_file_upload_handler(nc, ev, p, cb);
+      		cout << "Recibo archivo" << endl;
       		break;
   	}
 }
@@ -61,7 +54,7 @@ void ServidorWeb::imprimirResultados(struct mg_connection *nc){
 	//Chunked encoding para evitar calcular la longitud del contenido
 	mg_printf(nc, "%s", "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\n\r\n");
 	// Se envia un JSON
-	mg_printf_http_chunk(nc, "{ \"ip\": \"%s\",  \"ult\": %d, \"segs\": %d }", ip, ult, segundos);
+	//mg_printf_http_chunk(nc, "{ \"ip\": \"%s\",  \"ult\": %d, \"segs\": %d }", ip, ult, segundos);
 	//Enviar chunk vacio, fin de la respuesta
 	mg_send_http_chunk(nc, "", 0);
 }
