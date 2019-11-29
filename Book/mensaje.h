@@ -1,3 +1,5 @@
+#ifndef MENSAJE_H_
+#define MENSAJE_H_
 #define TAM_MAX_DATA 65000
 //Definicion de identificadores para operaciones permitidas
 #define suma 1
@@ -8,3 +10,4 @@ struct mensaje{
 	int operationId; //Identificador de la operación
 	char arguments[TAM_MAX_DATA];
 };
+#endif

@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
     map<string,int> lectura=a.getMapFromFile("./file.txt");
 
     int words = 0;
-    int numServidores = 3;
+    int numServidores = 1;
     for(auto it = lectura.cbegin(); it != lectura.cend(); ++it){
         words = words + it->second;
     }
@@ -40,8 +40,8 @@ int main(int argc, char *argv[]){
     string auxCadena="";
     for(auto it2 = lectura.cbegin(); it2 != lectura.cend(); ++it2){
         auxCadena +=it2->first+ ',';
-        if(j == posiciones[z]) {
-            cout << auxCadena<<"\n\n\n" << endl;
+        if(j == posiciones[z] - 1) {
+            //cout << auxCadena<<"\n\n\n" << endl;
             cadenas.push_back(auxCadena);
             auxCadena="";
             z++;
@@ -53,17 +53,14 @@ int main(int argc, char *argv[]){
      * */
     for(int i = 0; i < numServidores; i++) {
         Solicitud s;
-        string res;
+        char res[2];
         cout << cadenas.at(i) << endl;
+        struct registro r;
+        string aux = cadenas[i].c_str();
+        cout << aux.length() << endl;
+        memcpy(&res, s.doOperation(argv[1], 5000, 1, (char*)&r), 2);
+        cout << res << endl;
 
-        /*
-        memcpy(&res, s.doOperation(argv[1], 5000, 1, cadenas.at(cont2).c_str(), strlen(cadenas.at(cont2).c_str())));
-        cont2++;
-        while (res == "OK")
-        {
-            cout << "Enviado y recibido" << endl;
-        }
-        */
     }
     
 }
