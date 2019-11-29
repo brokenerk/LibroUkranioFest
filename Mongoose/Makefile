@@ -1,8 +1,5 @@
-run: pc_central.cpp ServidorWeb.o
-	g++ -DMG_ENABLE_HTTP_STREAMING_MULTIPART pc_central.cpp ServidorWeb.o mongoose.c -w -o pc_central
-
-ServidorWeb.o: ServidorWeb.cpp ServidorWeb.h
-	g++ ServidorWeb.cpp -w -c
+run: pc_central.cpp
+	g++ -DMG_ENABLE_HTTP_STREAMING_MULTIPART pc_central.cpp mongoose.c -w -o pc_central
 
 clean:
 	rm -r *.o
