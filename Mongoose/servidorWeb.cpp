@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "mongoose.h"
+#include "mapCreator.h"
 #include <iostream>
 using namespace std;
 
@@ -51,12 +52,25 @@ static void handle_upload(struct mg_connection *nc, int ev, void *p) {
       break;
     }
     case MG_EV_HTTP_PART_END: {
+
+
+
+
+
+
+
+
+
+
+
+
+      int porcentaje = 50;
+      char time_string[100] = "10:00.2342";
       mg_printf(nc,
                 "HTTP/1.1 200 OK\r\n"
                 "Content-Type: text/plain\r\n"
                 "Connection: close\r\n\r\n"
-                "Written %ld of POST data to a temp file\n\n",
-                (long) ftell(data->fp));
+                "%d %s\n", (int) porcentaje, (char *)time_string);
       nc->flags |= MG_F_SEND_AND_CLOSE;
       fclose(data->fp);
       free(data);
