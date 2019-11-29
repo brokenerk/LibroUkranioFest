@@ -1,5 +1,5 @@
-run: pc_central.cpp
-	g++ -DMG_ENABLE_HTTP_STREAMING_MULTIPART pc_central.cpp mongoose.c -w -o pc_central
+run: servidorWeb.cpp
+	g++ -DMG_ENABLE_HTTP_STREAMING_MULTIPART servidorWeb.cpp mongoose.c -w -o servidorWeb
 
 clean:
 	rm -r *.o

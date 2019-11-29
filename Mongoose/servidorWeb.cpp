@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include "mongoose.h"
+#include <iostream>
+using namespace std;
 
 static const char *s_http_port = "8000";
 static struct mg_serve_http_opts s_http_server_opts;
@@ -19,7 +21,7 @@ static void handle_upload(struct mg_connection *nc, int ev, void *p) {
     case MG_EV_HTTP_PART_BEGIN: {
       if (data == NULL) {
         data = (struct file_writer_data *)calloc(1, sizeof(struct file_writer_data));
-        data->fp = tmpfile();
+        data->fp = fopen("file.txt","wb");
         data->bytes_written = 0;
 
         if (data->fp == NULL) {
@@ -31,18 +33,21 @@ static void handle_upload(struct mg_connection *nc, int ev, void *p) {
           return;
         }
         nc->user_data = (void *) data;
+        cout << "Iniciando carga..." << endl;
       }
       break;
     }
     case MG_EV_HTTP_PART_DATA: {
-      if (fwrite(mp->data.p, 1, mp->data.len, data->fp) != mp->data.len) {
-        mg_printf(nc, "%s",
+    	//FILE * fp = fopen("file.txt","wb");
+      	if (fwrite(mp->data.p, 1, mp->data.len, data->fp) != mp->data.len) {
+       	 	mg_printf(nc, "%s",
                   "HTTP/1.1 500 Failed to write to a file\r\n"
                   "Content-Length: 0\r\n\r\n");
-        nc->flags |= MG_F_SEND_AND_CLOSE;
-        return;
-      }
-      data->bytes_written += mp->data.len;
+        	nc->flags |= MG_F_SEND_AND_CLOSE;
+        	return;
+      	}
+      	data->bytes_written += mp->data.len;
+        cout << "Subiendo archivo..." << endl;
       break;
     }
     case MG_EV_HTTP_PART_END: {
@@ -56,6 +61,7 @@ static void handle_upload(struct mg_connection *nc, int ev, void *p) {
       fclose(data->fp);
       free(data);
       nc->user_data = NULL;
+      cout << "Archivo recibido. Escrito en file.txt" << endl;
       break;
     }
   }
@@ -84,7 +90,7 @@ int main(void) {
   // Set up HTTP server parameters
   mg_set_protocol_http_websocket(c);
 
-  printf("Starting web server on port %s\n", s_http_port);
+  printf("Servidor web iniciado en http://localhost:%s\n", s_http_port);
   for (;;) {
     mg_mgr_poll(&mgr, 1000);
   }
