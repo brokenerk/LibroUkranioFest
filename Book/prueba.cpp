@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <cstring>
 #include <cmath>
 #include "mapCreator.h"
 int main(){
@@ -11,8 +13,35 @@ int main(){
         words = words + it->second;
     }
 
-    int reparto = words / numServidores;
+    int reparto = lectura.size() / numServidores;
     int procesadas = 0;
+
+    //se llena para obtener las posiciones
+    vector<int> posiciones;
+    for (int k = 0; k <numServidores ; ++k) {
+        posiciones.push_back(reparto*(k+1));
+    }
+
+    vector<string>cadenas;
+    int z = 0;
+    /*
+     * Aqui se generan las cadenas
+     * */
+    int j=0;
+    string auxCadena="";
+    for(auto it2 = lectura.cbegin(); it2 != lectura.cend(); ++it2){
+        auxCadena +=it2->first+ ',';
+        if(j == posiciones[z]) {
+            cout << "Aqui se envia cadena: "<< auxCadena<<"\n\n\n" << endl;
+            cadenas.push_back(auxCadena);
+            auxCadena="";
+            z++;
+        }
+        j++;
+    }
+    /*
+     * Aqui se envian las cadenas a los servidores, almacenas en el arreglo cadenas
+     * */
 
     for(int i = 0; i < numServidores; i++) {
         int inicio = 0;
@@ -23,18 +52,10 @@ int main(){
         else{
             cant = trunc(reparto);
         }
-
-        int j = 0;
-        for(auto it2 = lectura.cbegin(); it2 != lectura.cend(); ++it2){
-            if(j == cant)
-                cout << "Aqui se envia" << endl;
-            cout << it2->first << endl;
-            j++;
-        }
-
         inicio = cant + 1;
         procesadas += cant;
     }
+
     cout<<words<<endl;
     cout << procesadas << endl;
 
