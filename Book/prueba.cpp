@@ -1,9 +1,18 @@
+#include "mapCreator.h"
+#include "Solicitud.h"
 #include <iostream>
 #include <vector>
 #include <cstring>
 #include <cmath>
-#include "mapCreator.h"
-int main(){
+#include <unistd.h>
+using namespace std;
+
+int main(int argc, char *argv[]){
+    if (argc != 2)
+    {
+        printf("Forma de uso: %s ip_servidor\n", argv[0]);
+        exit(0);
+    }
     mapCreator a;
     map<string,int> lectura=a.getMapFromFile("./file.txt");
 
@@ -32,7 +41,7 @@ int main(){
     for(auto it2 = lectura.cbegin(); it2 != lectura.cend(); ++it2){
         auxCadena +=it2->first+ ',';
         if(j == posiciones[z]) {
-            cout << "Aqui se envia cadena: "<< auxCadena<<"\n\n\n" << endl;
+            cout << auxCadena<<"\n\n\n" << endl;
             cadenas.push_back(auxCadena);
             auxCadena="";
             z++;
@@ -42,35 +51,19 @@ int main(){
     /*
      * Aqui se envian las cadenas a los servidores, almacenas en el arreglo cadenas
      * */
-
     for(int i = 0; i < numServidores; i++) {
-        int inicio = 0;
-        int cant = 0;
-        if(i == numServidores -1){
-            cant = words - procesadas;
+        Solicitud s;
+        string res;
+        cout << cadenas.at(i) << endl;
+
+        /*
+        memcpy(&res, s.doOperation(argv[1], 5000, 1, cadenas.at(cont2).c_str(), strlen(cadenas.at(cont2).c_str())));
+        cont2++;
+        while (res == "OK")
+        {
+            cout << "Enviado y recibido" << endl;
         }
-        else{
-            cant = trunc(reparto);
-        }
-        inicio = cant + 1;
-        procesadas += cant;
+        */
     }
-
-    cout<<words<<endl;
-    cout << procesadas << endl;
-
-
-
-    /*
-    int words=0;
-    for(auto it = palabras.cbegin(); it != palabras.cend(); ++it){
-        auto ap = lectura.find(it->first);
-        if (ap != lectura.end()){
-            words=words+ap->second;
-        }
-    }
-    */
-    //cout<<palabras.size()<<endl;
-    //cout<<lectura.size()<<endl;
     
 }
