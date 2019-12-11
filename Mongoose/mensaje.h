@@ -7,5 +7,6 @@ struct mensaje{
 	unsigned int requestId; //Identificador del mensaje
 	int operationId; //Identificador de la operación
 	int tam; //Tamaño arguments
+	int wordTimes; //Numero de veces que aparece la palabra
 	char arguments[TAM_MAX_DATA];
 };

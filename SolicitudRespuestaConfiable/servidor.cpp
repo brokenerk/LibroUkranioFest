@@ -11,11 +11,14 @@ int main()
         struct mensaje *msj = resp.getRequest();
         
         if(msj != NULL) {
-        	int n = 0;
-	        memcpy(&n, &msj->arguments, 4);
-	        nbd = nbd + n;
-	        printf("\nRecibido: %d \nNBD: %d\n", n, nbd);
-	        resp.sendReply((char *)&nbd);
+            int tam = 0;
+            memcpy(&tam, &msj->tam, 4);
+        	char* rec = new char[tam];
+	        memcpy(rec, msj->arguments, tam);
+            cout << "Recibido" << endl;
+	        cout << rec << endl;
+	        resp.sendReply("OK");
+            cout << "Enviando OK" << endl;
         }
         
     }

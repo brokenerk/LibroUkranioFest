@@ -17,14 +17,16 @@ struct mensaje *Respuesta::getRequest(void)
         perror("Recvfrom failed");
     }
 
+    /*
     cout << "\nMensaje recibido" << endl;
     cout << "Direccion: " << p.obtieneDireccion() << endl;
     cout << "Puerto: " << p.obtienePuerto() << endl;
+    */
     struct mensaje* sms = (struct mensaje*)p.obtieneDatos();
 
     unsigned int reqId = 0;
     memcpy(&reqId, &sms->requestId, sizeof(sms->requestId));
-    printf("\nContRequest: %u SMS->requestId: %d\n", contRequest, reqId);
+    //printf("\nContRequest: %u SMS->requestId: %d\n", contRequest, reqId);
 
     if(reqId < contRequest) {
         cout << "Paquete repetido. Desechando.." << endl;
@@ -36,18 +38,20 @@ struct mensaje *Respuesta::getRequest(void)
     }
 }
 
-void Respuesta::sendReply(char *respuesta)
+void Respuesta::sendReply(char *respuesta, int tam)
 {
     struct mensaje sms;
     sms.messageType = 1;
     sms.operationId = 0;
     sms.requestId = 0;
-    sms.tam = strlen(respuesta);
-    memcpy(sms.arguments, respuesta, strlen(respuesta));
-
+    sms.tam = tam;
+    memcpy(sms.arguments, respuesta, tam);
     p.inicializaDatos((char *)&sms);
+    
+    /*
     cout << "\nMensaje enviado" << endl;
     cout << "Direccion: " << p.obtieneDireccion() << endl;
     cout << "Puerto: " << p.obtienePuerto() << endl;
+    */
     socketlocal->envia(p);
 }
