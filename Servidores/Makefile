@@ -1,6 +1,8 @@
-run: servidorA.cpp servidorB.cpp MapCreator.o Respuesta.o SocketDatagrama.o PaqueteDatagrama.o
+run: servidorA.cpp servidorB.cpp servidorC.cpp servidorD.cpp MapCreator.o Respuesta.o SocketDatagrama.o PaqueteDatagrama.o
 	g++ servidorA.cpp MapCreator.o Respuesta.o SocketDatagrama.o PaqueteDatagrama.o -w -o servidorA
 	g++ servidorB.cpp MapCreator.o Respuesta.o SocketDatagrama.o PaqueteDatagrama.o -w -o servidorB
+	g++ servidorC.cpp MapCreator.o Respuesta.o SocketDatagrama.o PaqueteDatagrama.o -w -o servidorC
+	g++ servidorD.cpp MapCreator.o Respuesta.o SocketDatagrama.o PaqueteDatagrama.o -w -o servidorD
 
 MapCreator.o: MapCreator.cpp MapCreator.h
 	g++ MapCreator.cpp -c

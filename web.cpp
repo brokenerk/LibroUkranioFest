@@ -12,8 +12,10 @@ using namespace std;
 static const char *s_http_port = "8000";
 static struct mg_serve_http_opts s_http_server_opts;
 char* ip_servidorA = new char[16];
-int ptoA = 0, ptoB = 0;
+int ptoA = 0, ptoB = 0, ptoC = 0, ptoD = 0;
 char* ip_servidorB = new char[16];
+char* ip_servidorC = new char[16];
+char* ip_servidorD = new char[16];
 
 struct file_writer_data {
 	FILE *fp;
@@ -21,8 +23,8 @@ struct file_writer_data {
 };
 
 static void handle_upload(struct mg_connection *nc, int ev, void *p) {
-	clock_t t_ini, t_fin;
-    t_ini = clock();
+	timeval ini, fin;
+    gettimeofday(&ini, NULL);
 
 	struct file_writer_data *data = (struct file_writer_data *) nc->user_data;
 	struct mg_http_multipart_part *mp = (struct mg_http_multipart_part *) p;
@@ -79,7 +81,7 @@ static void handle_upload(struct mg_connection *nc, int ev, void *p) {
 				perror("Error");
 			}
 
-			int numServidores = 2;
+			int numServidores = 4;
 			int reparto = lectura.size() / numServidores;
 
 			/* Se llena para obtener las posiciones */
@@ -90,11 +92,15 @@ static void handle_upload(struct mg_connection *nc, int ev, void *p) {
 		    direccionesIp.reserve(numServidores);
 		    direccionesIp.push_back(ip_servidorA);
 		    direccionesIp.push_back(ip_servidorB);
+		    direccionesIp.push_back(ip_servidorC);
+		    direccionesIp.push_back(ip_servidorD);
 
 		    vector<int> puertos;
 		    puertos.reserve(numServidores);
 		    puertos.push_back(ptoA);
 		    puertos.push_back(ptoB);
+		    puertos.push_back(ptoC);
+		    puertos.push_back(ptoD);
 
 		    for (int i = 0; i < numServidores ; i++) {
 		        posiciones.push_back(reparto * (i + 1));
@@ -144,9 +150,9 @@ static void handle_upload(struct mg_connection *nc, int ev, void *p) {
 		    int correctos = totalWords - error;
 			double porcentaje = ((double)correctos / (double)totalWords) * 100.0;
 			printf("Porcentaje: %.2f\n\n", porcentaje);
-    		t_fin = clock();
 
-			double time = (double)(t_fin - t_ini) / CLOCKS_PER_SEC;
+			gettimeofday(&fin, NULL);
+			double time = (double)((fin.tv_sec + fin.tv_usec * 0.000001) - (ini.tv_sec + ini.tv_usec * 0.000001));
 			mg_printf(nc,
 					"HTTP/1.1 200 OK\r\n"
 					"Content-Type: text/plain\r\n"
@@ -169,8 +175,8 @@ static void ev_handler(struct mg_connection *nc, int ev, void *ev_data) {
 }
 
 int main(int argc, char *argv[]){
-	if(argc != 5){
-		printf("Forma de uso: %s ip_servidorA ptoA servidorB ptoB\n", argv[0]);
+	if(argc != 9){
+		printf("Forma de uso: %s ip_servidorA ptoA servidorB ptoB servidorC ptoC servidorD ptoD\n", argv[0]);
 		exit(0);
 	}
 	struct mg_mgr mgr;
@@ -179,6 +185,10 @@ int main(int argc, char *argv[]){
 	ptoA = atoi(argv[2]);
 	strcpy(ip_servidorB, argv[3]);
 	ptoB = atoi(argv[4]);
+	strcpy(ip_servidorC, argv[5]);
+	ptoC = atoi(argv[6]);
+	strcpy(ip_servidorD, argv[7]);
+	ptoD = atoi(argv[8]);
 
 	mg_mgr_init(&mgr, NULL);
 	c = mg_bind(&mgr, s_http_port, ev_handler);
