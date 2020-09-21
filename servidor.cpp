@@ -3,13 +3,16 @@
 #include <cstring>
 #include <iostream>
 using namespace std;
-int main()
-{
+int main(int argc, char *argv[]) {
+    if(argc != 2) {
+        printf("Forma de uso: %s pto\n", argv[0]);
+        exit(0);
+    }
     MapCreator m;
     map<string, int> rae = m.getMapFromFile("rae.txt");
     map<string, int> palabras;
-    Respuesta resp(7203);
-    cout << "Servidor D iniciado pto: 7203....\n";
+    Respuesta resp(atoi(argv[1]));
+    cout << "Servidor iniciado pto: " << argv[1] << "....\n";
     int r = -1;
     while (true) {
         struct mensaje *msj = resp.getRequest();
